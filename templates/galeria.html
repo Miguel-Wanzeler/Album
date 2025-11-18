@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Galeria 💗</title>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffe6f2, #ffd1e8);
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff3e7f;
+            text-shadow: 0 0 8px #ff9ac6;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 18px;
+            background: #ff5e8e;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            box-shadow: 0 0 12px rgba(255, 0, 100, 0.3);
+        }
+
+        a:hover {
+            background: #ff2f6d;
+        }
+
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            width: 90%;
+            margin: auto;
+        }
+
+        .foto-card {
+            background: white;
+            padding: 10px;
+            border-radius: 14px;
+            box-shadow: 0 0 12px rgba(255, 100, 150, 0.25);
+            transition: .3s;
+        }
+
+        .foto-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 50, 120, 0.35);
+        }
+
+        img {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        p {
+            color: #ff4081;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Nosso álbum 💞</h1>
+
+<a href="{{ url_for('index') }}">Enviar mais fotos</a>
+
+<div class="galeria">
+    {% if fotos %}
+        {% for foto in fotos %}
+        <div class="foto-card">
+            <img src="{{ url_for('static', filename='uploads/' + foto) }}" alt="Foto">
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhuma foto enviada ainda 💗</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
