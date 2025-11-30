@@ -75,7 +75,7 @@
     {% if fotos %}
         {% for foto in fotos %}
         <div class="foto-card">
-            <img src="{{ url_for('static', filename='uploads/' + foto) }}" alt="Foto">
+            <img src="{{ foto }}" style="width: 200px;">
         </div>
         {% endfor %}
     {% else %}
@@ -85,3 +85,4 @@
 
 </body>
 </html>
+
