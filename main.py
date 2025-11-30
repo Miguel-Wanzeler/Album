@@ -1,15 +1,20 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
+# -----------------------------------------------
+# CONFIGURAÇÃO DO CLOUDINARY
+# -----------------------------------------------
+cloudinary.config(
+    cloud_name="dz8nukjdv",
+    api_key="359541287531737",
+    api_secret="osPJd1-AbjUxkeW_ni7G6_UAtpM"
+)
 
-app.config["pasta_fotos"] = UPLOAD_FOLDER
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+# Lista local para armazenar URLs das fotos
 fotos = []
 
 @app.route("/")
@@ -19,25 +24,22 @@ def index():
 @app.route("/postar", methods=["POST"])
 def upload():
     file = request.files["foto"]
+
     if file:
-        save_path = os.path.join(app.config["pasta_fotos"], file.filename)
-        file.save(save_path)
-        fotos.append(file.filename)
+        # Faz upload para o Cloudinary
+        resultado = cloudinary.uploader.upload(file)
+        
+        # Pega a URL pública da imagem
+        url = resultado["secure_url"]
+
+        # Salva a URL na lista
+        fotos.append(url)
+
     return redirect(url_for("galeria"))
 
 @app.route("/galeria")
 def galeria():
-    # remove fotos que não existem mais
-    fotos_existentes = []
-    for foto in fotos:
-        caminho = os.path.join(app.config["pasta_fotos"], foto)
-        if os.path.exists(caminho):
-            fotos_existentes.append(foto)
-
-    # atualiza a lista
-    fotos.clear()
-    fotos.extend(fotos_existentes)
-
+    # Envia para o template as URLs das fotos
     return render_template("galeria.html", fotos=fotos)
 
 if __name__ == "__main__":
